@@ -8,7 +8,7 @@ This is for educational purposes only. Please do NOT alter this 'README.md'. Kee
 
 ## License Information
 
-There is currently no license on this project. This project is provided "as-is". Just do NOT copy and modify, stating "That you've made this.", when really it is {{ :https://github.com/DevCool/plugins.git | here }}.
+There is currently no license on this project. This project is provided "as-is". Just do NOT copy and modify, stating "That you've made this.", when really it is https://github.com/DevCool/plugins.git.
 
 ## Author
 
