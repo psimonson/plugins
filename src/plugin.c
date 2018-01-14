@@ -81,28 +81,28 @@ void* plugin_load(char *filename, plugin_manager_t* pm)
 	plugin = dlopen(filename, RTLD_NOW);
 	if (plugin == NULL) {
 		printf("Cannot load plugin.\n");
-		cleanup_plugins(pm->discovery);
+		cleanup_plugins(pm);
 		plugin_manager_free(pm);
 		return NULL;
 	}
 	initfunc = (plugin_init_func)dlsym(plugin, initfunc_name);
 	if (initfunc == NULL) {
 		printf("Cannot load init function.\n");
-		cleanup_plugins(pm->discovery);
+		cleanup_plugins(pm);
 		plugin_manager_free(pm);
 		return NULL;
 	}
 	rc = initfunc(pm);
 	if (rc < 0) {
 		printf("Error occured inside plugin '%s'.\n", initfunc_name);
-		cleanup_plugins(pm->discovery);
+		cleanup_plugins(pm);
 		plugin_manager_free(pm);
 		return NULL;
 	}
 	return plugin;
 }
 
-void* discover_plugins(const char *dirname, plugin_manager_t* pm)
+void discover_plugins(const char *dirname, plugin_manager_t* pm)
 {
 	char fullpath[256];
 	plugin_discovery_state_t* discovery; 
@@ -110,7 +110,7 @@ void* discover_plugins(const char *dirname, plugin_manager_t* pm)
 
 	discovery = malloc(sizeof(plugin_discovery_state_t));
 	if (discovery == NULL)
-		return NULL;
+		return;
 	d = opendir(dirname);
 	while (d != NULL) {
 		struct dirent *dp;
@@ -125,10 +125,7 @@ void* discover_plugins(const char *dirname, plugin_manager_t* pm)
 				node = plugin_load(fullpath, pm);
 				if (node) {
 					plugin_handle_list_t* list;
-					list = malloc(sizeof(plugin_handle_list_t));
-					if (list == NULL)
-						return NULL;
-
+					list = malloc(sizeof *list);
 					list->handle = node;
 					list->next = NULL;
 					discovery->handle_list->handle = node;
@@ -139,16 +136,15 @@ void* discover_plugins(const char *dirname, plugin_manager_t* pm)
 		closedir(d);
 	}
 	pm->discovery = discovery;
-	return discovery;
 }
 
-void cleanup_plugins(plugin_discovery_state_t* discovery)
+void cleanup_plugins(plugin_manager_t* pm)
 {
 	plugin_handle_list_t* list;
 	plugin_discovery_state_t* state;
 
-	state = (plugin_discovery_state_t*)discovery;
-	list = (plugin_handle_list_t*)discovery->handle_list;
+	state = (plugin_discovery_state_t*)pm->discovery;
+	list = (plugin_handle_list_t*)pm->discovery->handle_list;
 
 	if (list) {
 		plugin_handle_list_t* tmp;

@@ -11,8 +11,8 @@ typedef int (*plugin_init_func)(plugin_manager_t* pm);
 plugin_manager_t* plugin_manager_new();
 void plugin_manager_free(plugin_manager_t* pm);
 
-void* discover_plugins(const char *dirname, plugin_manager_t* pm);
-void cleanup_plugins(plugin_discovery_state_t* discovery);
+void discover_plugins(const char *dirname, plugin_manager_t* pm);
+void cleanup_plugins(plugin_manager_t* pm);
 
 #endif
 
