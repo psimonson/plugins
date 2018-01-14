@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS?=-std=c89 -Wall -Wno-unused-function
 LDFLAGS?=
-LIBS=
+LIBS=-ldl
 
 SRCDIR=$(shell pwd)
 OBJDIR=$(SRCDIR)
 BINDIR=$(SRCDIR)
 
-OBJECTS=main.c.o
+OBJECTS=main.c.o plugin.c.o
 TARGET=plugins
 
 .PHONY: all clean install uninstall
