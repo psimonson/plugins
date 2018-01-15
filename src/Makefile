@@ -1,29 +1,30 @@
 CC=gcc
-CFLAGS?=-std=c89 -Wall -Wno-unused-function
+CFLAGS?=-std=c89 -g -Wall -Wno-unused-function
 LDFLAGS?=
 LIBS=-ldl
 
 SRCDIR=$(shell pwd)
-OBJDIR=$(SRCDIR)
-BINDIR=$(SRCDIR)
+OBJDIR=$(SRCDIR)/../obj
+BINDIR=$(SRCDIR)/../bin
 
-OBJECTS=main.c.o plugin.c.o
-TARGET=plugins
+OBJECTS=$(OBJDIR)/main.c.o $(OBJDIR)/plugin_manager.c.o $(OBJDIR)/plugin_discovery.c.o
+TARGET=$(BINDIR)/PluginManager
 
 .PHONY: all clean install uninstall
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	@echo $(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ $(LIBS)
+	@echo CCLD $(CFLAGS) $(LDFLAGS) $^ -o $@ $(LIBS)
 	@$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-%.c.o: %.c
-	@echo $(CC) $(CFLAGS) -c $< -o $@
+$(OBJDIR)/%.c.o: $(SRCDIR)/%.c
+	@echo CC $(CFLAGS) -c $< -o $@
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@echo "Cleaning objects and executables..."
-	@rm -f $(OBJDIR)/*.c.o $(BINDIR)/$(TARGET)
+	@rm -f $(OBJDIR)/*.c.o $(TARGET)
+	@rmdir $(OBJDIR) $(BINDIR)
 	@echo "Cleaned."
 
 install:

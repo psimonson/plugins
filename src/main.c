@@ -1,23 +1,20 @@
-#include "common/logger.h"
-#include "common/prs_string.h"
-#include "plugin.h"
+#include "plugin_discovery.h"
+#include "plugin_manager.h"
 
-const char key[] = "FSKDJLKSJFFfhf890w983ry38947@^#*(&^$&*";
-
-#undef LOG_FILE
-#define LOG_FILE "log.txt"
+#include <stdio.h>
+#include <stdlib.h>
 
 /* program to load plugins and execute them */
 int main(int argc, char **argv)
 {
 	plugin_manager_t* pm;
+	void* pdstate;
 
-	printf("TODO: Add plugin loading here.\n");
-	write_log(LOG_FILE, "Plugin loading here.\n");
+	printf("Hello from main()\n");
 	pm = plugin_manager_new();
-	discover_plugins("plugins", pm);
-	cleanup_plugins(pm);
+	pdstate = discover_plugins("plugins", pm);
 	plugin_manager_free(pm);
+	cleanup_plugins(pdstate);
 	return 0;
 }
 
